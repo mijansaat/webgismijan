@@ -57,6 +57,27 @@
             resolutions: [2800, 1400, 700, 350, 175, 84, 42, 21, 11.2, 5.6, 2.8, 1.4, 0.7, 0.35, 0.14, 0.07],
         });
         var map = L.map('map', {
+	// --- Papar Data dari Google Sheet ---
+fetch("https://sheets.googleapis.com/v4/spreadsheets/1MnVOJdJjgUSGVu5RsTWem_X1yZvWqLNTP4h0-kUTdto/values/KUBUR!A1:F96?
+key=AIzaSyDHxbRFsEKNlmG2d0gAmfrhGi4QZYoyqEw")
+  .then(response => response.json())
+  .then(data => {
+      const rows = data.values;
+      if (!rows) return;
+
+      // Baca setiap baris dan paparkan marker
+      rows.forEach(row => {
+          const name = row[0];
+          const lat = parseFloat(row[1]);
+          const lon = parseFloat(row[2]);
+          const info = row[3] || "";
+
+          if (!isNaN(lat) && !isNaN(lon)) {
+              L.marker([lat, lon]).addTo(map)
+                .bindPopup(<b>${name}</b><br>${info});
+          }
+      });
+  });
             crs: crs,
             continuousWorld: false,
             worldCopyJump: false, 
